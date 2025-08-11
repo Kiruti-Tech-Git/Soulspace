@@ -1,25 +1,31 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { 
-  User, 
-  Bell, 
-  Moon, 
-  Sun, 
-  Download, 
-  Cloud, 
-  Shield, 
-  Settings, 
+import {
+  User,
+  Bell,
+  Moon,
+  Sun,
+  Download,
+  Cloud,
+  Shield,
+  Settings,
   Heart,
   Calendar,
   TrendingUp,
   BookOpen,
-  Edit3
+  Edit3,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
@@ -38,17 +44,22 @@ export default function Profile() {
   const [notifications, setNotifications] = useState({
     dailyReminder: true,
     weeklyInsights: true,
-    motivationalQuotes: false
+    motivationalQuotes: false,
   });
   const [privacy, setPrivacy] = useState({
     localLock: false,
-    cloudBackup: true
+    cloudBackup: true,
   });
   const { toast } = useToast();
 
-  const userName = userProfile?.username || userProfile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || "Beautiful Soul";
+  const userName =
+    userProfile?.username ||
+    userProfile?.full_name ||
+    user?.user_metadata?.full_name ||
+    user?.email?.split("@")[0] ||
+    "Beautiful Soul";
   const userEmail = user?.email || "soul@example.com";
-  const isDarkMode = theme === 'dark';
+  const isDarkMode = theme === "dark";
 
   useEffect(() => {
     if (user) {
@@ -63,7 +74,7 @@ export default function Profile() {
       const stats = await analyticsService.getDashboardStats();
       setDashboardStats(stats);
     } catch (error: any) {
-      console.error('Failed to load dashboard data:', error);
+      console.error("Failed to load dashboard data:", error);
     } finally {
       setLoading(false);
     }
@@ -75,55 +86,75 @@ export default function Profile() {
       setUserProfile(profile);
       setProfileFullName(profile?.full_name || "");
     } catch (error: any) {
-      console.error('Failed to load user profile:', error);
+      console.error("Failed to load user profile:", error);
     }
   };
 
   const handleUpdateProfile = async () => {
     try {
       await userService.updateUserProfile({
-        full_name: profileFullName
+        full_name: profileFullName,
       });
-      
+
       // Reload profile data
       await loadUserProfile();
       setEditingProfile(false);
-      
+
       toast({
         title: "Profile updated",
-        description: "Your profile has been successfully updated."
+        description: "Your profile has been successfully updated.",
       });
     } catch (error: any) {
-      console.error('Failed to update profile:', error);
+      console.error("Failed to update profile:", error);
       toast({
         title: "Update failed",
         description: "Failed to update your profile. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
 
   const handleThemeToggle = () => {
-    const newTheme = isDarkMode ? 'light' : 'dark';
+    const newTheme = isDarkMode ? "light" : "dark";
     setTheme(newTheme);
     toast({
       title: isDarkMode ? "Light mode enabled" : "Dark mode enabled",
-      description: "Your theme preference has been updated."
+      description: "Your theme preference has been updated.",
     });
   };
 
   const handleExportData = () => {
     toast({
       title: "Export started",
-      description: "Your data is being prepared for download."
+      description: "Your data is being prepared for download.",
     });
   };
 
   const userStats = [
-    { label: "Journal Entries", value: dashboardStats?.journalCount?.toString() || "0", icon: BookOpen, color: "text-soul-purple" },
-    { label: "Day Streak", value: dashboardStats?.streak?.toString() || "0", icon: Calendar, color: "text-soul-green" },
-    { label: "Mood Logs", value: dashboardStats?.moodCount?.toString() || "0", icon: Heart, color: "text-soul-pink" },
-    { label: "Vision Boards", value: dashboardStats?.visionBoardCount?.toString() || "0", icon: TrendingUp, color: "text-soul-blue" }
+    {
+      label: "Journal Entries",
+      value: dashboardStats?.journalCount?.toString() || "0",
+      icon: BookOpen,
+      color: "text-soul-purple",
+    },
+    {
+      label: "Day Streak",
+      value: dashboardStats?.streak?.toString() || "0",
+      icon: Calendar,
+      color: "text-soul-green",
+    },
+    {
+      label: "Mood Logs",
+      value: dashboardStats?.moodCount?.toString() || "0",
+      icon: Heart,
+      color: "text-soul-pink",
+    },
+    {
+      label: "Vision Boards",
+      value: dashboardStats?.visionBoardCount?.toString() || "0",
+      icon: TrendingUp,
+      color: "text-soul-blue",
+    },
   ];
 
   return (
@@ -155,13 +186,18 @@ export default function Profile() {
             <Avatar className="h-16 w-16">
               <AvatarImage src="" />
               <AvatarFallback className="bg-gradient-primary text-white text-xl font-medium">
-                {userName.split(' ').map(n => n[0]).join('')}
+                {userName
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
               </AvatarFallback>
             </Avatar>
             {editingProfile ? (
               <div className="flex-1 space-y-3">
                 <div>
-                  <Label htmlFor="username" className="text-sm font-medium">Username</Label>
+                  <Label htmlFor="username" className="text-sm font-medium">
+                    Username
+                  </Label>
                   <Input
                     id="username"
                     value={profileUsername}
@@ -171,7 +207,9 @@ export default function Profile() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="fullname" className="text-sm font-medium">Full Name</Label>
+                  <Label htmlFor="fullname" className="text-sm font-medium">
+                    Full Name
+                  </Label>
                   <Input
                     id="fullname"
                     value={profileFullName}
@@ -204,7 +242,10 @@ export default function Profile() {
               <div className="flex-1">
                 <h3 className="text-lg font-semibold">{userName}</h3>
                 <p className="text-muted-foreground">{userEmail}</p>
-                <Badge variant="secondary" className="mt-2 bg-soul-purple-light text-soul-purple">
+                <Badge
+                  variant="secondary"
+                  className="mt-2 bg-soul-purple-light text-soul-purple"
+                >
                   Gratitude Seeker ✨
                 </Badge>
               </div>
@@ -222,10 +263,15 @@ export default function Profile() {
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
             {userStats.map((stat, index) => (
-              <div key={index} className="text-center p-3 bg-accent/50 rounded-lg">
+              <div
+                key={index}
+                className="text-center p-3 bg-accent/50 rounded-lg"
+              >
                 <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
                 <div className="text-2xl font-bold">{stat.value}</div>
-                <div className="text-xs text-muted-foreground">{stat.label}</div>
+                <div className="text-xs text-muted-foreground">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
@@ -255,10 +301,7 @@ export default function Profile() {
                 </p>
               </div>
             </div>
-            <Switch
-              checked={isDarkMode}
-              onCheckedChange={handleThemeToggle}
-            />
+            <Switch checked={isDarkMode} onCheckedChange={handleThemeToggle} />
           </div>
         </CardContent>
       </Card>
@@ -282,12 +325,15 @@ export default function Profile() {
             </div>
             <Switch
               checked={notifications.dailyReminder}
-              onCheckedChange={(checked) => 
-                setNotifications(prev => ({ ...prev, dailyReminder: checked }))
+              onCheckedChange={(checked) =>
+                setNotifications((prev) => ({
+                  ...prev,
+                  dailyReminder: checked,
+                }))
               }
             />
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium">Weekly Insights</p>
@@ -297,12 +343,15 @@ export default function Profile() {
             </div>
             <Switch
               checked={notifications.weeklyInsights}
-              onCheckedChange={(checked) => 
-                setNotifications(prev => ({ ...prev, weeklyInsights: checked }))
+              onCheckedChange={(checked) =>
+                setNotifications((prev) => ({
+                  ...prev,
+                  weeklyInsights: checked,
+                }))
               }
             />
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium">Motivational Quotes</p>
@@ -312,8 +361,11 @@ export default function Profile() {
             </div>
             <Switch
               checked={notifications.motivationalQuotes}
-              onCheckedChange={(checked) => 
-                setNotifications(prev => ({ ...prev, motivationalQuotes: checked }))
+              onCheckedChange={(checked) =>
+                setNotifications((prev) => ({
+                  ...prev,
+                  motivationalQuotes: checked,
+                }))
               }
             />
           </div>
@@ -338,12 +390,12 @@ export default function Profile() {
             </div>
             <Switch
               checked={privacy.localLock}
-              onCheckedChange={(checked) => 
-                setPrivacy(prev => ({ ...prev, localLock: checked }))
+              onCheckedChange={(checked) =>
+                setPrivacy((prev) => ({ ...prev, localLock: checked }))
               }
             />
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium">Cloud Backup</p>
@@ -353,8 +405,8 @@ export default function Profile() {
             </div>
             <Switch
               checked={privacy.cloudBackup}
-              onCheckedChange={(checked) => 
-                setPrivacy(prev => ({ ...prev, cloudBackup: checked }))
+              onCheckedChange={(checked) =>
+                setPrivacy((prev) => ({ ...prev, cloudBackup: checked }))
               }
             />
           </div>
@@ -368,26 +420,26 @@ export default function Profile() {
           <CardDescription>Export and backup your data</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="w-full justify-start hover:bg-soul-purple/10"
             onClick={handleExportData}
           >
             <Download className="h-4 w-4 mr-2" />
             Export as PDF
           </Button>
-          
-          <Button 
-            variant="outline" 
+
+          <Button
+            variant="outline"
             className="w-full justify-start hover:bg-soul-purple/10"
             onClick={handleExportData}
           >
             <Download className="h-4 w-4 mr-2" />
             Export as JSON
           </Button>
-          
-          <Button 
-            variant="outline" 
+
+          <Button
+            variant="outline"
             className="w-full justify-start hover:bg-soul-purple/10"
           >
             <Cloud className="h-4 w-4 mr-2" />
@@ -405,6 +457,9 @@ export default function Profile() {
               Your digital sanctuary for gratitude and mindfulness
             </p>
             <p className="text-xs text-muted-foreground">Version 1.0.0</p>
+            <p className="text-xs text-muted-foreground">
+              © {new Date().getFullYear()} Kiruti Tech
+            </p>
           </div>
         </CardContent>
       </Card>
