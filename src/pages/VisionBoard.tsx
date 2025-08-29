@@ -435,41 +435,56 @@ export default function VisionBoard() {
                 </CardHeader>
                 <CardContent>
                   {/* Vision Board Grid */}
-                  <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div className="columns-2 gap-3 space-y-3 mb-4">
                     {selectedBoard.vision_board_items?.map((item) => (
-                      <Card key={item.id} className="group hover:shadow-soft transition-all duration-200 cursor-pointer border border-border/50 hover:border-soul-purple/30 relative">
-                        <CardContent className="p-4 text-center space-y-2">
+                      <Card key={item.id} className="group hover:shadow-soft transition-all duration-300 cursor-pointer border border-border/50 hover:border-soul-purple/30 relative break-inside-avoid overflow-hidden">
+                        <CardContent className="p-0 relative">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDeleteItem(item.id)}
-                            className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="absolute top-2 right-2 h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 hover:bg-black/70 text-white rounded-full z-10"
                           >
                             <X className="h-3 w-3" />
                           </Button>
                           
-                          <div className="text-4xl">
+                          <div className="relative">
                             {item.item_type === "image" && (
                               item.content.startsWith('data:image') || item.content.startsWith('http') ? (
-                                <img 
+                                <div className="relative overflow-hidden group">
+                                  <img 
                                   src={item.content} 
                                   alt={item.item_title || "Vision item"} 
-                                  className="w-full h-20 object-cover rounded-lg"
-                                />
+                                    className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
+                                  />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                </div>
                               ) : (
-                                <div className="w-full h-20 bg-gray-200 rounded-lg flex items-center justify-center">
-                                  <span className="text-xs text-gray-500">Image</span>
+                                <div className="w-full h-32 bg-gradient-to-br from-soul-purple-light to-soul-pink/20 rounded-lg flex items-center justify-center">
+                                  <ImageIcon className="h-8 w-8 text-soul-purple" />
                                 </div>
                               )
                             )}
-                            {item.item_type === "quote" && <Quote className="h-8 w-8 mx-auto text-soul-purple" />}
-                            {item.item_type === "color" && <div className={`w-12 h-12 rounded-xl mx-auto ${item.content}`} />}
+                            {item.item_type === "quote" && (
+                              <div className="p-6 bg-gradient-to-br from-soul-purple/10 to-soul-pink/10 min-h-32 flex flex-col items-center justify-center text-center">
+                                <Quote className="h-6 w-6 text-soul-purple mb-3" />
+                                <p className="text-sm text-foreground italic leading-relaxed">"{item.content}"</p>
+                              </div>
+                            )}
+                            {item.item_type === "color" && (
+                              <div className="relative h-24 flex items-center justify-center">
+                                <div className={`w-full h-full ${item.content} relative overflow-hidden`}>
+                                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
+                                </div>
+                              </div>
+                            )}
                           </div>
+                          
+                          {/* Overlay content */}
                           {item.item_title && (
-                            <h4 className="font-medium text-sm">{item.item_title}</h4>
-                          )}
-                          {item.item_type === "quote" && (
-                            <p className="text-xs text-muted-foreground italic">"{item.content}"</p>
+                            <div className="p-3 bg-card/95 backdrop-blur-sm">
+                              <h4 className="font-medium text-sm text-center line-clamp-2">{item.item_title}</h4>
+                            </div>
                           )}
                         </CardContent>
                       </Card>
@@ -478,10 +493,11 @@ export default function VisionBoard() {
                     {/* Add New Item */}
                     <Dialog open={isCreating} onOpenChange={setIsCreating}>
                       <DialogTrigger asChild>
-                        <Card className="hover:shadow-soft transition-all duration-200 cursor-pointer border-2 border-dashed border-soul-purple/30 hover:border-soul-purple">
-                          <CardContent className="p-4 flex flex-col items-center justify-center h-24 text-soul-purple">
+                        <Card className="hover:shadow-soft transition-all duration-300 cursor-pointer border-2 border-dashed border-soul-purple/30 hover:border-soul-purple break-inside-avoid">
+                          <CardContent className="p-6 flex flex-col items-center justify-center h-32 text-soul-purple">
                             <Plus className="h-6 w-6 mb-2" />
                             <span className="text-sm font-medium">Add Item</span>
+                            <span className="text-xs text-muted-foreground mt-1">Images, quotes & colors</span>
                           </CardContent>
                         </Card>
                       </DialogTrigger>
